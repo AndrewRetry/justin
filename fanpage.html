@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Justin Bieber Fan Hub</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #0b1020;
+      --bg-2: #0e1430;
+      --card: rgba(255,255,255,0.08);
+      --card-2: rgba(255,255,255,0.12);
+      --border: rgba(255,255,255,0.12);
+      --text: #f8f9ff;
+      --muted: #cdd2ff;
+      --accent: #8aa6ff;
+      --accent-2:#c594ff;
+      --success:#4ade80;
+      --shadow: 0 20px 50px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --maxw: 1152px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 10% -10%, #5b6bff22 0%, transparent 60%),
+        radial-gradient(900px 600px at 110% 10%, #b972ff22 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      overflow-x:hidden;
+    }
+
+    /* --- Navbar --- */
+    .nav{
+      position:sticky; top:0; z-index:1000;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(14,20,48,.75), rgba(14,20,48,.35));
+      border-bottom:1px solid var(--border);
+    }
+    .nav-inner{
+      max-width:var(--maxw); margin:0 auto; padding:.9rem 1rem;
+      display:flex; align-items:center; gap:1rem; justify-content:space-between;
+    }
+    .brand{
+      display:flex; align-items:center; gap:.75rem; font-weight:800; letter-spacing:.3px;
+      background: linear-gradient(90deg,#ffffff,#dfe6ff,#ffffff);
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      font-size:1.1rem;
+    }
+    .brand .logo{
+      display:grid; place-items:center; width:36px; height:36px; border-radius:10px;
+      background: linear-gradient(135deg,#5f79ff,#b071ff);
+      box-shadow: inset 0 0 24px #ffffff33;
+      color:#fff;
+    }
+    .nav-links{
+      display:flex; gap:.25rem; align-items:center;
+    }
+    .tab{
+      border:none; background:transparent; color:var(--muted); font-weight:600;
+      padding:.55rem .9rem; border-radius:999px; cursor:pointer;
+      transition: all .18s ease;
+    }
+    .tab:hover{ color:var(--text); background:rgba(255,255,255,.06) }
+    .tab.active{ color:#0b1020; background:#ffffff; }
+
+    /* --- Page container --- */
+    .wrap{ max-width:var(--maxw); margin:0 auto; padding:28px 16px 80px }
+
+    /* --- Hero --- */
+    .hero{
+      position:relative; overflow:hidden; border-radius:var(--radius);
+      background:
+        radial-gradient(1200px 600px at 0% 0%, #899bff22 0%, transparent 60%),
+        linear-gradient(135deg, #5f79ff22, #b071ff22);
+      border:1px solid var(--border);
+      padding:52px 28px; text-align:center; box-shadow: var(--shadow);
+    }
+    .hero h1{
+      margin:0 0 .5rem;
+      font-size: clamp(34px, 4vw, 52px);
+      line-height:1.05;
+      background: linear-gradient(90deg,#cfd7ff,#ffffff,#dcd0ff);
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      letter-spacing:.6px;
+    }
+    .hero p{
+      margin:0 auto 1.2rem; max-width:680px; color:var(--muted); font-weight:500;
+    }
+    .pills{
+      display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin-top:.75rem;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:.4rem; padding:.45rem .75rem;
+      border-radius:999px; font-size:.9rem; color:#e9ecff;
+      border:1px solid var(--border); background: rgba(255,255,255,.06);
+    }
+    .live-dot{
+      width:9px; height:9px; border-radius:50%; background:var(--success);
+      box-shadow:0 0 10px var(--success); animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+    /* --- Sections --- */
+    .section{
+      margin-top:28px; display:none; opacity:0; transform: translateY(12px);
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .section.active{ display:block; opacity:1; transform:none; }
+
+    /* --- Cards and grids --- */
+    .card{
+      border:1px solid var(--border); border-radius:var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+    }
+
+    /* Status card */
+    .status{
+      padding:22px;
+    }
+    .status h2{ margin:0 0 1rem; font-size:1.25rem; display:flex; align-items:center; gap:.6rem }
+    .status small{ color:var(--muted) }
+
+    /* Gallery */
+    .gallery-grid{
+      display:grid; gap:16px;
+      grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+      margin-top:14px;
+    }
+    .gallery{
+      overflow:hidden; position:relative;
+    }
+    .gallery .img{
+      width:100%; height:220px; object-fit:cover;
+      transform: scale(1.03); transition: transform .35s ease;
+    }
+    .gallery:hover .img{ transform: scale(1.08) }
+    .g-meta{
+      position:absolute; inset:auto 10px 10px 10px;
+      padding:10px 12px; border-radius:12px;
+      background: rgba(10,12,30,.55); border:1px solid var(--border);
+      backdrop-filter: blur(6px);
+    }
+    .g-title{ font-weight:700; font-size:.95rem }
+    .g-desc{ font-size:.85rem; color:#dfe3ff; opacity:.85 }
+
+    /* Video */
+    .video{
+      padding:0; overflow:hidden;
+    }
+    .video-head{
+      padding:18px 18px 0; display:flex; justify-content:space-between; align-items:center;
+    }
+    .video-frame{
+      width:100%; aspect-ratio: 16 / 9; border:0; display:block;
+      border-top-left-radius: var(--radius); border-top-right-radius: var(--radius);
+      border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius);
+    }
+    .video-caption{
+      padding:12px 18px 20px; color:var(--muted); border-top:1px solid var(--border);
+    }
+
+    /* Facts */
+    .facts-grid{
+      display:grid; gap:14px;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      margin-top:14px;
+    }
+    .fact{
+      padding:16px; cursor:pointer; transition: transform .18s ease, background .18s ease;
+    }
+    .fact:hover{ transform: translateY(-3px); background: rgba(255,255,255,.06) }
+    .fact h3{ margin:0 0 .35rem; font-size:1.05rem }
+    .fact .content{
+      max-height:0; overflow:hidden; transition:max-height .28s ease;
+      color:#e7e9ffcc; line-height:1.45;
+    }
+    .fact.expanded .content{ max-height: 180px; }
+
+    /* Chat */
+    .chat{
+      padding:16px;
+    }
+    .chat-wrap{ display:grid; gap:12px }
+    .bubble{
+      padding:12px 14px; border-radius:14px; width:fit-content; max-width:min(680px, 90%);
+      box-shadow: inset 0 0 40px rgba(255,255,255,.05);
+    }
+    .bot{ background: rgba(138,166,255,.18); border:1px solid var(--border) }
+    .you{ background: rgba(197,148,255,.18); border:1px solid var(--border); margin-left:auto }
+    .chat-box{
+      display:flex; gap:10px; align-items:center; margin-top:6px;
+      background: rgba(255,255,255,.06); border:1px solid var(--border); border-radius:14px; padding:8px 10px;
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:.35rem; font-size:.88rem;
+      background: rgba(255,255,255,.08); border:1px solid var(--border);
+      padding:.35rem .6rem; border-radius:999px; color:#e9ecff;
+    }
+    .input{
+      flex:1; background:transparent; border:none; outline:none; color:var(--text);
+      font: inherit; padding:.55rem .35rem;
+    }
+    .send{
+      border:none; border-radius:12px; padding:.6rem .9rem; cursor:pointer; color:#0b1020;
+      background: linear-gradient(90deg,#9fb2ff,#e1b5ff); font-weight:700;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .send:hover{ transform: translateY(-1px); box-shadow: var(--shadow) }
+
+    /* Modal */
+    .modal{
+      display:none; position:fixed; inset:0; z-index:2000; place-items:center;
+      background: radial-gradient(1200px 800px at 50% 10%, rgba(95,121,255,.2), transparent 70%), rgba(6,8,20,.7);
+      backdrop-filter: blur(6px);
+    }
+    .modal.active{ display:grid }
+    .modal-card{
+      width:min(1000px, 92vw);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid var(--border); border-radius:20px; overflow:hidden; box-shadow: var(--shadow);
+      position:relative;
+    }
+    .modal img{ display:block; width:100%; height:auto }
+    .modal-close{
+      position:absolute; top:10px; right:10px; border:none; border-radius:10px; cursor:pointer;
+      background: rgba(0,0,0,.45); color:#fff; width:38px; height:38px;
+      display:grid; place-items:center; backdrop-filter: blur(4px);
+    }
+
+    /* Footer */
+    .footer{ opacity:.75; text-align:center; font-size:.9rem; color:var(--muted); margin-top:28px }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important }
+    }
+
+    /* Mobile tweaks */
+    @media (max-width:720px){
+      .nav-links{ display:none }
+      .hero{ text-align:left; padding:34px 22px }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <div class="logo"><i class="ri-music-2-fill"></i></div>
+        JB Fan Hub
+      </div>
+      <nav class="nav-links">
+        <button class="tab active" data-section="home">Home</button>
+        <button class="tab" data-section="gallery">Photos</button>
+        <button class="tab" data-section="videos">Videos</button>
+        <button class="tab" data-section="facts">Facts</button>
+        <button class="tab" data-section="chat">Chat</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero card" id="hero">
+      <h1>Justin Bieber</h1>
+      <p>Welcome to a slick, modern fan experience—photos, facts, and a playful chat, all in one place.</p>
+      <div class="pills">
+        <span class="pill"><span class="live-dot"></span> Live Updates</span>
+        <span class="pill"><i class="ri-music-2-line"></i> Classics & New</span>
+        <span class="pill"><i class="ri-instagram-line"></i> Gallery</span>
+      </div>
+    </section>
+
+    <!-- HOME -->
+    <section class="section active" id="home">
+      <div class="status card">
+        <h2><span class="live-dot"></span> What's Justin doing right now? <small id="last-updated"></small></h2>
+        <div id="current-status">
+          <p><strong>📍 Location:</strong> Los Angeles, CA</p>
+          <p><strong>🎵 Activity:</strong> Recording new music at the studio</p>
+          <p><strong>💬 Latest:</strong> “Working on something special for you guys! 🎶”</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section" id="gallery">
+      <h2 style="margin:10px 4px 12px">Fan Photos Gallery</h2>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </section>
+
+    <!-- VIDEOS -->
+    <section class="section" id="videos">
+      <div class="video card">
+        <div class="video-head">
+          <h2 style="margin:0">Latest Video</h2>
+          <span class="chip"><i class="ri-youtube-fill"></i> Official</span>
+        </div>
+        <div style="padding:18px">
+          <iframe
+            class="video-frame"
+            src="https://www.youtube.com/embed/kffacxfA7G4"
+            title="Baby (Official Music Video)"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="video-caption">
+          <strong>Baby</strong> — one of the most iconic pop tracks. Turn it up 🎧
+        </div>
+      </div>
+    </section>
+
+    <!-- FACTS -->
+    <section class="section" id="facts">
+      <h2 style="margin:10px 4px 12px">Fun Facts About Justin</h2>
+      <div class="facts-grid" id="facts-grid"></div>
+    </section>
+
+    <!-- CHAT -->
+    <section class="section" id="chat">
+      <div class="chat card">
+        <h2 style="margin:0 0 8px 2px">Chat with JB Bot</h2>
+        <div class="chat-wrap" id="chat-messages">
+          <div class="bubble bot">
+            Hey Belieber! 👋 I’m here to chat about everything Justin. What would you like to know?
+          </div>
+        </div>
+        <div class="chat-box">
+          <span class="chip"><i class="ri-sparkling-2-fill"></i> JB Bot</span>
+          <input class="input" id="chat-input" placeholder="Ask me anything about Justin..."/>
+          <button class="send" id="send-btn">
+            <i class="ri-send-plane-2-fill"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">Built with ❤️ for Beliebers · Glass UI · Responsive</p>
+  </main>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <button class="modal-close" id="close-modal"><i class="ri-close-line"></i></button>
+      <img id="modal-image" src="" alt="Selected photo">
+    </div>
+  </div>
+
+  <script>
+    // ------------------ Data ------------------
+    const mockPhotos = [
+    { src:"./images/Concert.jpg", title:"Concert Performance", desc:"Madison Square Garden, electric night" },
+    { src:"./images/Studio.jpg", title:"Studio Session", desc:"Behind the scenes, crafting hits" },
+    { src:"./images/RedCarpet.jpg", title:"Red Carpet", desc:"Grammy night glam" },
+    { src:"./images/Fanmeet.jpeg", title:"Fan Meet & Greet", desc:"Post-show smiles" },
+    { src:"./images/MusicVideo.jpg", title:"Music Video", desc:"On-set energy" },
+    { src:"./images/BackStage.jpg", title:"Tour Backstage", desc:"Moments before showtime" }
+    ];
+
+    const mockFacts = [
+      { title:"Early Start", content:"Discovered on YouTube at just 13 when Scooter Braun clicked one of his videos." },
+      { title:"Multi-Instrumentalist", content:"Taught himself piano, drums, guitar, and trumpet early on." },
+      { title:"Record Breaker", content:"Youngest male artist to debut #1 on Billboard 200 with My World 2.0 at 16." },
+      { title:"Global Impact", content:"Over 150M records sold worldwide — perennial hitmaker." },
+      { title:"Purpose Tour", content:"Among the highest-grossing tours with 2.7M+ tickets sold." },
+      { title:"Giveback", content:"Raised millions for charities like Pencils of Promise and Make-A-Wish." }
+    ];
+
+    const mockReplies = [
+      "That’s awesome! Justin would love to hear that! 🎵",
+      "Fun tidbit: Purple is a favorite! 💜",
+      "Iconic pick. What’s your top JB track?",
+      "New music rumors are swirling… exciting times! ✨",
+      "Beliebers really are the best community. 💕",
+      "Craving a Tim Hortons run now… ☕",
+      "Have you checked his latest IG post? 📸",
+      "Those dance moves still go crazy! 💃"
+    ];
+
+    // ------------------ Tabs ------------------
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.section');
+    tabs.forEach(t=>{
+      t.addEventListener('click', ()=>{
+        tabs.forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+        const id = t.dataset.section;
+        sections.forEach(s=>s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        // jump to top of content on mobile
+        window.scrollTo({ top: document.querySelector('.wrap').offsetTop - 60, behavior: 'smooth' });
+      });
+    });
+
+    // ------------------ Home status ------------------
+    const statusEl = document.getElementById('current-status');
+    const lastUpdated = document.getElementById('last-updated');
+    function updateStatus(){
+      const statuses = [
+        { location:"Los Angeles, CA", activity:"Recording new music at the studio", latest:"Working on something special for you guys! 🎶" },
+        { location:"Toronto, ON", activity:"Visiting family and friends", latest:"Home is where the heart is ❤️" },
+        { location:"New York, NY", activity:"Photoshoot for magazine cover", latest:"Feeling blessed and grateful 🙏" },
+        { location:"Nashville, TN", activity:"Collaborating with other artists", latest:"Amazing session today! Can't wait to share 🔥" },
+      ];
+      const r = statuses[Math.floor(Math.random()*statuses.length)];
+      statusEl.innerHTML = `
+        <p><strong>📍 Location:</strong> ${r.location}</p>
+        <p><strong>🎵 Activity:</strong> ${r.activity}</p>
+        <p><strong>💬 Latest:</strong> “${r.latest}”</p>
+      `;
+      const d = new Date();
+      lastUpdated.textContent = `· Updated ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+    }
+
+    // ------------------ Gallery ------------------
+    const grid = document.getElementById('gallery-grid');
+    function addCard({src,title,desc}){
+      const card = document.createElement('div');
+      card.className = 'gallery card gallery';
+      card.innerHTML = `
+        <img class="img" src="${src}" alt="${title}">
+        <div class="g-meta">
+          <div class="g-title">${title}</div>
+          <div class="g-desc">${desc}</div>
+        </div>
+      `;
+      card.querySelector('img').addEventListener('click', ()=>openModal(src));
+      grid.appendChild(card);
+    }
+    function loadGallery(){ mockPhotos.forEach(addCard); }
+
+    // ------------------ Facts ------------------
+    const factsGrid = document.getElementById('facts-grid');
+    function loadFacts(){
+      mockFacts.forEach(f=>{
+        const el = document.createElement('div');
+        el.className = 'fact card';
+        el.innerHTML = `
+          <h3>${f.title}</h3>
+          <div class="content">${f.content}</div>
+        `;
+        el.addEventListener('click', ()=> el.classList.toggle('expanded'));
+        factsGrid.appendChild(el);
+      });
+    }
+
+    // ------------------ Chat ------------------
+    const chatBox = document.getElementById('chat-messages');
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function addBubble(text, who='bot'){
+      const b = document.createElement('div');
+      b.className = `bubble ${who==='you'?'you':'bot'}`;
+      b.textContent = text;
+      chatBox.appendChild(b);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    function sendMessage(){
+      const text = input.value.trim(); if(!text) return;
+      addBubble(text,'you');
+      input.value = '';
+      setTimeout(()=>{
+        const r = mockReplies[Math.floor(Math.random()*mockReplies.length)];
+        addBubble(r,'bot');
+      }, 500);
+    }
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter') sendMessage(); });
+
+    // ------------------ Modal ------------------
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-image');
+    document.getElementById('close-modal').addEventListener('click', ()=> modal.classList.remove('active'));
+    function openModal(src){ modalImg.src = src; modal.classList.add('active'); }
+    modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('active'); });
+
+    // ------------------ Init ------------------
+    document.addEventListener('DOMContentLoaded', ()=>{
+      updateStatus();
+      setInterval(updateStatus, 30000);
+      loadGallery();
+      loadFacts();
+    });
+  </script>
+</body>
+</html>
